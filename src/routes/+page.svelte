@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { convexHull, drawHull } from '../lib/hull';
 	type Point = {
 		x: number;
 		y: number;
@@ -21,10 +22,25 @@
 			const ctx = canvas.getContext('2d');
 			if (ctx) {
 				ctx.clearRect(0, 0, canvas.width, canvas.height);
+
 				points.forEach((point: Point) => {
 					ctx.fillStyle = point.color;
 					ctx.fillRect(point.x, point.y, 5, 5);
 				});
+
+				const groupedPoints = points.reduce(
+					(groups, point) => {
+						if (!groups[point.color]) groups[point.color] = [];
+						groups[point.color].push(point);
+						return groups;
+					},
+					{} as Record<string, Point[]>
+				);
+
+				for (const color in groupedPoints) {
+					const hullPoints = convexHull(groupedPoints[color]);
+					drawHull(ctx, hullPoints, color);
+				}
 			}
 		}
 	}
