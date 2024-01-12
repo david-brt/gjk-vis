@@ -1,55 +1,47 @@
 <script lang="ts">
 	import { convexHull, drawHull } from '../lib/hull';
-	type Point = {
-		x: number;
-		y: number;
-		color: string;
-	};
+	import { Point } from '../lib/point';
+
+	type Polygon = { [color: string]: Point[] };
 
 	let color: string = 'red';
-	let points: Point[] = [];
+	let polygons: Polygon = { red: [], blue: [] };
 
 	function handleMouseDown(event: MouseEvent): void {
 		const rect = (event.target as HTMLElement).getBoundingClientRect();
 		const x = event.clientX - rect.left;
 		const y = event.clientY - rect.top;
-		points = [...points, { x, y, color }];
+		polygons[color].push(new Point(x, y));
+		draw();
 	}
 
-	$: {
-		if (typeof document !== 'undefined') {
-			const canvas = document.querySelector('#myCanvas') as HTMLCanvasElement;
-			const ctx = canvas.getContext('2d');
-			if (ctx) {
-				ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-				points.forEach((point: Point) => {
-					ctx.fillStyle = point.color;
-					ctx.fillRect(point.x, point.y, 5, 5);
-				});
-
-				const groupedPoints = points.reduce(
-					(groups, point) => {
-						if (!groups[point.color]) groups[point.color] = [];
-						groups[point.color].push(point);
-						return groups;
-					},
-					{} as Record<string, Point[]>
-				);
-
-				for (const color in groupedPoints) {
-					const hullPoints = convexHull(groupedPoints[color]);
-					drawHull(ctx, hullPoints, color);
-				}
-			}
+	function draw() {
+		if (typeof document === 'undefined') {
+			return;
 		}
+		const canvas = document.querySelector('#canv') as HTMLCanvasElement;
+		const ctx = canvas.getContext('2d');
+		if (!ctx) {
+			return;
+		}
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+		Object.keys(polygons).forEach((color: string) => {
+			const vertices = polygons[color];
+			const hullPoints = convexHull(vertices);
+			drawHull(ctx, hullPoints, color);
+			vertices.forEach((vertice: Point) => {
+				ctx.fillStyle = color;
+				ctx.fillRect(vertice.x, vertice.y, 5, 5);
+			});
+		});
 	}
 </script>
 
 <button on:click={() => (color = 'red')}>Red</button>
 <button on:click={() => (color = 'blue')}>Blue</button>
 <canvas
-	id="myCanvas"
+	id="canv"
 	width="500"
 	height="500"
 	on:mousedown={handleMouseDown}
