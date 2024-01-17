@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Plot from '$lib/plot.svelte';
 	import { convexHull, drawHull } from '../lib/hull';
 	import { Point } from '../lib/point';
 
@@ -47,3 +48,5 @@
 	on:mousedown={handleMouseDown}
 	style="border: 1px solid black"
 ></canvas>
+
+<Plot></Plot>
