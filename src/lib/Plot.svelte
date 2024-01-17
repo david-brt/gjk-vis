@@ -1,18 +1,22 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import Chart from 'chart.js/auto';
+	import AutoChart from 'chart.js/auto';
+	import { Chart } from 'chart.js';
 	import { getRelativePosition } from 'chart.js/helpers';
 
 	let canvas: HTMLCanvasElement;
 	let chart: any;
 
-	const data = {
+	const data: Chart.ChartData = {
 		labels: ['Expenses', 'Savings', 'Investments'],
 		datasets: [
 			{
 				label: 'polygon 1',
 				data: []
-				// hoverOffset: 4,
+			},
+			{
+				label: 'polygon 2',
+				data: []
 			}
 		]
 	};
@@ -47,18 +51,29 @@
 			},
 			onClick: (e: Event) => {
 				const canvasPosition = getRelativePosition(e, chart);
-				const dataX = chart.scales.x.getValueForPixel(canvasPosition.x);
-				const dataY = chart.scales.y.getValueForPixel(canvasPosition.y);
-				console.log(dataX, dataY);
+				const dataX: number = chart.scales.x.getValueForPixel(canvasPosition.x);
+				const dataY: number = chart.scales.y.getValueForPixel(canvasPosition.y);
+				chart.data.datasets.forEach((dataset: Chart.ChartDataSets) => {
+					if (dataset.label != 'polygon 1') return;
+					console.log(dataset);
+					dataset.data && dataset.data.push({ x: dataX, y: dataY });
+					chart.update('none');
+				});
 			}
 		}
 	};
 	onMount(() => {
 		const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
-		chart = new Chart(ctx, config);
+		chart = new AutoChart(ctx, config);
 	});
 </script>
 
-<div>
+<div class="plot-container">
 	<canvas bind:this={canvas} />
 </div>
+
+<style>
+	.plot-container {
+		padding: 0 20%;
+	}
+</style>
