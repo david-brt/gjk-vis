@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { type ChartConfiguration } from 'chart.js';
 	import Chart from 'chart.js/auto';
 	import { getRelativePosition } from 'chart.js/helpers';
 
@@ -9,36 +8,41 @@
 
 	const data = {
 		labels: ['Expenses', 'Savings', 'Investments'],
-		datasets: []
+		datasets: [
+			{
+				label: 'polygon 1',
+				data: []
+				// hoverOffset: 4,
+			}
+		]
 	};
-	const config = {
+	const config: any = {
 		type: 'scatter',
 		data: data,
 		options: {
+			aspectRatio: 1,
 			scales: {
 				x: {
 					max: 100,
 					min: -100,
-					position: 'center'
+					position: 'center',
+					ticks: {
+						stepSize: 10
+					}
 				},
 				y: {
 					max: 100,
 					min: -100,
-					position: 'center'
+					position: 'center',
+					ticks: {
+						stepSize: 10
+					}
 				}
 			},
 			responsive: true,
 			plugins: {
 				legend: {
-					position: 'bottom',
-					display: true,
-					labels: {
-						usePointStyle: true,
-						padding: 20,
-						font: {
-							size: 14
-						}
-					}
+					display: false
 				}
 			},
 			onClick: (e: Event) => {
@@ -51,7 +55,7 @@
 	};
 	onMount(() => {
 		const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
-		chart = new Chart(ctx, config as ChartConfiguration);
+		chart = new Chart(ctx, config);
 	});
 </script>
 
