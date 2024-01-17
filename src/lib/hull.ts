@@ -1,8 +1,5 @@
-type Point = {
-	x: number;
-	y: number;
-	color: string;
-};
+import { Point } from './point';
+
 export function convexHull(points: Point[]): Point[] {
 	if (points.length < 3) return points;
 
@@ -48,7 +45,6 @@ export function drawHull(ctx: CanvasRenderingContext2D, hull: Point[], color: st
 		ctx.beginPath();
 		ctx.moveTo(hull[0].x, hull[0].y);
 		for (let i = 1; i < hull.length; i++) {
-			console.log(hull[i]);
 			ctx.lineTo(hull[i].x, hull[i].y);
 		}
 		ctx.lineTo(hull[0].x, hull[0].y); // Close the hull
