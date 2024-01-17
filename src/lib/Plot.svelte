@@ -1,22 +1,22 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import AutoChart from 'chart.js/auto';
-	import { Chart } from 'chart.js';
 	import { getRelativePosition } from 'chart.js/helpers';
+	import { polygons, selectedColor } from '$lib/store';
+	import { Point } from './point';
 
 	let canvas: HTMLCanvasElement;
 	let chart: any;
 
 	const data: Chart.ChartData = {
-		labels: ['Expenses', 'Savings', 'Investments'],
 		datasets: [
 			{
-				label: 'polygon 1',
-				data: []
+				label: 'blue',
+				data: $polygons['blue']
 			},
 			{
-				label: 'polygon 2',
-				data: []
+				label: 'red',
+				data: $polygons['red']
 			}
 		]
 	};
@@ -51,12 +51,17 @@
 			},
 			onClick: (e: Event) => {
 				const canvasPosition = getRelativePosition(e, chart);
-				const dataX: number = chart.scales.x.getValueForPixel(canvasPosition.x);
-				const dataY: number = chart.scales.y.getValueForPixel(canvasPosition.y);
+				const dataX = chart.scales.x.getValueForPixel(canvasPosition.x);
+				const dataY = chart.scales.y.getValueForPixel(canvasPosition.y);
 				chart.data.datasets.forEach((dataset: Chart.ChartDataSets) => {
-					if (dataset.label != 'polygon 1') return;
-					console.log(dataset);
-					dataset.data && dataset.data.push({ x: dataX, y: dataY });
+					const color = $selectedColor;
+					if (dataset.label != color) return;
+					(dataset.data as { x: number; y: number }[]).push({ x: dataX, y: dataY });
+					polygons.update((p) => {
+						const point = new Point(dataX, dataY);
+						p[color] ? p[color].push(point) : (p[color] = [point]);
+						return p;
+					});
 					chart.update('none');
 				});
 			}
@@ -66,6 +71,7 @@
 		const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 		chart = new AutoChart(ctx, config);
 	});
+	$: console.log($polygons);
 </script>
 
 <div class="plot-container">
