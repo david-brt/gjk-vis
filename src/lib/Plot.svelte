@@ -20,6 +20,15 @@
 			}
 		]
 	};
+
+	const drawing = {
+		afterDraw(chart, args, options) {
+			const { ctx } = chart;
+			ctx.save();
+			ctx.beginPath();
+		}
+	};
+
 	const config: any = {
 		type: 'scatter',
 		data: data,
@@ -71,7 +80,6 @@
 		const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 		chart = new AutoChart(ctx, config);
 	});
-	$: console.log($polygons);
 </script>
 
 <div class="plot-container">

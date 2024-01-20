@@ -1,8 +1,8 @@
 import { writable, type Writable } from 'svelte/store';
 import { Point } from '$lib/point';
 
-type Polygon = { [color: string]: Point[] };
+type PolygonMap = { [color: string]: Point[] };
 
-export const polygons: Writable<Polygon> = writable({});
+export const polygons: Writable<PolygonMap> = writable({});
 
-export const selectedColor = writable('blue');
+export const selectedColor = writable('red');

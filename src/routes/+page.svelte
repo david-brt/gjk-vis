@@ -1,19 +1,20 @@
 <script lang="ts">
 	import Plot from '$lib/Plot.svelte';
-	import { convexHull, drawHull } from '$lib/hull';
+	import { drawHull } from '$lib/hull';
 	import { Point } from '$lib/point';
+	import { Polygon } from '$lib/polygon';
 	import { selectedColor } from '$lib/store';
 
-	type Polygon = { [color: string]: Point[] };
+	type PolygonMap = { [color: string]: Polygon };
 
 	let color: string = 'red';
-	let polygons: Polygon = { red: [], blue: [] };
+	let polygons: PolygonMap = { red: new Polygon(), blue: new Polygon() };
 
 	function handleMouseDown(event: MouseEvent): void {
 		const rect = (event.target as HTMLElement).getBoundingClientRect();
 		const x = event.clientX - rect.left;
 		const y = event.clientY - rect.top;
-		polygons[color].push(new Point(x, y));
+		polygons[color].points.push(new Point(x, y));
 		draw();
 	}
 
@@ -29,10 +30,10 @@
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 		Object.keys(polygons).forEach((color: string) => {
-			const vertices = polygons[color];
-			const hullPoints = convexHull(vertices);
+			const polygon = polygons[color];
+			const hullPoints = polygon.convexHull();
 			drawHull(ctx, hullPoints, color);
-			vertices.forEach((vertice: Point) => {
+			polygon.points.forEach((vertice: Point) => {
 				ctx.fillStyle = color;
 				ctx.fillRect(vertice.x, vertice.y, 5, 5);
 			});
