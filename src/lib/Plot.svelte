@@ -4,6 +4,7 @@
 	import { getRelativePosition } from 'chart.js/helpers';
 	import { polygons, selectedColor } from '$lib/store';
 	import { Point } from './point';
+	import { Polygon } from './polygon';
 
 	let canvas: HTMLCanvasElement;
 	let chart: any;
@@ -12,11 +13,13 @@
 		datasets: [
 			{
 				label: 'blue',
-				data: $polygons['blue']
+				data: $polygons['blue'] ? $polygons['blue'].getDrawable() : [],
+				showLine: true
 			},
 			{
 				label: 'red',
-				data: $polygons['red']
+				data: $polygons['red'] ? $polygons['red'].getDrawable() : [],
+				showLine: true
 			}
 		]
 	};
@@ -57,12 +60,14 @@
 				chart.data.datasets.forEach((dataset: Chart.ChartDataSets) => {
 					const color = $selectedColor;
 					if (dataset.label != color) return;
-					(dataset.data as { x: number; y: number }[]).push({ x: dataX, y: dataY });
+					// update store
 					polygons.update((p) => {
 						const point = new Point(dataX, dataY);
-						p[color] ? p[color].push(point) : (p[color] = [point]);
+						p[color] ? p[color].addPoint(point) : (p[color] = new Polygon([point]));
 						return p;
 					});
+					// update chart
+					dataset.data = $polygons[color].getDrawable();
 					chart.update('none');
 				});
 			}

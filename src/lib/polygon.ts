@@ -5,7 +5,7 @@ export class Polygon {
 	// convex hull of the given points
 	hullPoints: Point[];
 
-	constructor(points = []) {
+	constructor(points: Point[] = []) {
 		this.points = points;
 		this.hullPoints = convexHull(points);
 	}
@@ -14,6 +14,14 @@ export class Polygon {
 		this.points.push(point);
 		sort(this.points);
 		this.hullPoints = convexHull(this.points);
+	}
+
+	getDrawable() {
+		const points = this.hullPoints.map((p: Point) => {
+			return { x: p.x, y: p.y };
+		});
+		points.push(points[0]);
+		return points;
 	}
 }
 
