@@ -21,30 +21,9 @@
 		]
 	};
 
-	const drawPolygon = {
-		afterDraw(chart: Chart, args, options) {
-			const { ctx } = chart;
-			if (!ctx) return;
-			ctx.save();
-			for (let key in $polygons) {
-				const poly = $polygons[key];
-				ctx.beginPath();
-				ctx.moveTo(poly[0].x, poly[0].y);
-				for (let i = 1; i <= poly.length; i++) {
-					const point = poly[i % poly.length];
-					ctx.lineTo(point.x, point.y);
-				}
-				ctx.fillStyle = key;
-				ctx.fill();
-			}
-			ctx.beginPath();
-		}
-	};
-
 	const config: any = {
 		type: 'scatter',
 		data: data,
-		plugins: [drawPolygon],
 		options: {
 			aspectRatio: 1,
 			scales: {

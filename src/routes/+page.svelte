@@ -31,7 +31,7 @@
 
 		Object.keys(polygons).forEach((color: string) => {
 			const polygon = polygons[color];
-			const hullPoints = polygon.convexHull();
+			const hullPoints = polygon.hullPoints;
 			drawHull(ctx, hullPoints, color);
 			polygon.points.forEach((vertice: Point) => {
 				ctx.fillStyle = color;
