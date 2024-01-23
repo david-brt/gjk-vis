@@ -10,6 +10,9 @@ export class Polygon {
 		this.hullPoints = convexHull(points);
 	}
 
+	/**
+	 * adds point to the polygon, sorts the points and recalculates the convex hull
+	 */
 	addPoint(point: Point) {
 		this.points.push(point);
 		sort(this.points);
@@ -23,6 +26,18 @@ export class Polygon {
 		points.push(points[0]);
 		return points;
 	}
+}
+
+export function minkowskiDifference(pa: Polygon, pb: Polygon) {
+	const diff = new Polygon();
+
+	for (let a of pa.hullPoints) {
+		for (let b of pb.hullPoints) {
+			diff.points.push(a.subtract(b));
+		}
+	}
+	sort(diff.points);
+	diff.hullPoints = convexHull(diff.points);
 }
 
 /**
