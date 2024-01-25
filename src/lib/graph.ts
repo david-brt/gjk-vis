@@ -13,14 +13,16 @@ export function setDimensions(scales: any, polygons: PolygonMap) {
 			{ x: { max: -Infinity, min: Infinity }, y: { max: -Infinity, min: Infinity } }
 		);
 
+	const width = scales.x.max - scales.x.min;
 	scales.x = {
 		...scales.x,
-		max: bounds.x.max + 0.1 * (bounds.x.max - bounds.x.min),
-		min: bounds.x.min - 0.1 * (bounds.x.max - bounds.x.min)
+		max: bounds.x.max + 0.1 * width,
+		min: bounds.x.min - 0.1 * width
 	};
+	const height = scales.y.max - scales.y.min;
 	scales.y = {
 		...scales.y,
-		max: bounds.y.max + 0.1 * (bounds.y.max - bounds.y.min),
-		min: bounds.y.min - 0.1 * (bounds.y.max - bounds.y.min)
+		max: bounds.y.max + 0.1 * height,
+		min: bounds.y.min - 0.1 * height
 	};
 }

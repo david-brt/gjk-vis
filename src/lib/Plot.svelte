@@ -61,8 +61,12 @@
 			},
 			onClick: (e: Event) => {
 				const canvasPosition = getRelativePosition(e, chart);
-				const dataX = chart.scales.x.getValueForPixel(canvasPosition.x);
-				const dataY = chart.scales.y.getValueForPixel(canvasPosition.y);
+				let dataX = chart.scales.x.getValueForPixel(canvasPosition.x);
+				let dataY = chart.scales.y.getValueForPixel(canvasPosition.y);
+
+				dataX = Math.round(dataX * 10) / 10;
+				dataY = Math.round(dataY * 10) / 10;
+
 				console.log(chart.data.datasets);
 				chart.data.datasets.forEach((dataset: Chart.ChartDataSets) => {
 					const color = $selectedColor;
