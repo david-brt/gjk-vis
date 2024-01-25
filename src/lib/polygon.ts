@@ -30,6 +30,9 @@ export class Polygon {
 
 export function minkowskiDifference(pa: Polygon, pb: Polygon) {
 	const diff = new Polygon();
+	if (pa.hullPoints.length == 0 || pb.hullPoints.length == 0) {
+		return diff;
+	}
 
 	for (let a of pa.hullPoints) {
 		for (let b of pb.hullPoints) {
@@ -38,6 +41,7 @@ export function minkowskiDifference(pa: Polygon, pb: Polygon) {
 	}
 	sort(diff.points);
 	diff.hullPoints = convexHull(diff.points);
+	return diff;
 }
 
 /**

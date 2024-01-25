@@ -4,7 +4,7 @@
 	import { getRelativePosition } from 'chart.js/helpers';
 	import { polygons, selectedColor } from '$lib/store';
 	import { Point } from './point';
-	import { Polygon } from './polygon';
+	import { Polygon, minkowskiDifference } from './polygon';
 
 	let canvas: HTMLCanvasElement;
 	let chart: any;
@@ -13,12 +13,17 @@
 		datasets: [
 			{
 				label: 'blue',
-				data: $polygons['blue'] ? $polygons['blue'].getDrawable() : [],
+				data: [],
 				showLine: true
 			},
 			{
 				label: 'red',
-				data: $polygons['red'] ? $polygons['red'].getDrawable() : [],
+				data: [],
+				showLine: true
+			},
+			{
+				label: 'minkowski difference',
+				data: [],
 				showLine: true
 			}
 		]
@@ -57,6 +62,7 @@
 				const canvasPosition = getRelativePosition(e, chart);
 				const dataX = chart.scales.x.getValueForPixel(canvasPosition.x);
 				const dataY = chart.scales.y.getValueForPixel(canvasPosition.y);
+				console.log(chart.data.datasets);
 				chart.data.datasets.forEach((dataset: Chart.ChartDataSets) => {
 					const color = $selectedColor;
 					if (dataset.label != color) return;
@@ -68,8 +74,14 @@
 					});
 					// update chart
 					dataset.data = $polygons[color].getDrawable();
-					chart.update('none');
 				});
+				if ($polygons['red'] === undefined || $polygons['blue'] === undefined) {
+					chart.update('none');
+					return;
+				}
+				const mDiff = minkowskiDifference($polygons['red'], $polygons['blue']).getDrawable();
+				chart.data.datasets[2].data = mDiff;
+				chart.update('none');
 			}
 		}
 	};
