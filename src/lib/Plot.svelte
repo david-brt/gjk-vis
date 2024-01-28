@@ -7,6 +7,8 @@
 	import { Polygon, minkowskiDifference } from './polygon';
 	import { setDimensions } from './graph';
 
+	export let showMinkowski: boolean;
+
 	let canvas: HTMLCanvasElement;
 	let chart: any;
 
@@ -84,19 +86,38 @@
 					chart.update('none');
 					return;
 				}
+
+				const visiblePolygons = $polygons;
+				visiblePolygons['mDiff'] = new Polygon([]);
+				chart.data.datasets[2].data = [];
+
 				let mDiff = minkowskiDifference($polygons['red'], $polygons['blue']).getDrawable();
-				chart.data.datasets[2].data = mDiff;
 				mDiff = mDiff.map((point) => new Point(point.x, point.y));
 				$polygons['mDiff'] = new Polygon(mDiff as Point[]);
-				setDimensions(chart.options.scales, $polygons);
+
+				setDimensions(chart.options.scales, visiblePolygons);
 				chart.update('none');
 			}
 		}
 	};
+
+	function toggleMinkowski(showMinkowski: boolean) {
+		if (!chart) return;
+		if (showMinkowski) {
+			chart.data.datasets[2].data = $polygons['mDiff'].getDrawable();
+			chart.update('none');
+			return;
+		}
+		chart.data.datasets[2].data = [];
+		chart.update('none');
+	}
+
 	onMount(() => {
 		const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 		chart = new AutoChart(ctx, config);
 	});
+
+	$: toggleMinkowski(showMinkowski);
 </script>
 
 <div class="plot-container">
