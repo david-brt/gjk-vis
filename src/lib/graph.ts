@@ -1,3 +1,5 @@
+import { PUBLIC_INITIAL_SCALE } from '$env/static/public';
+
 export function setDimensions(scales: any, chartData: any) {
 	const bounds = chartData
 		.map((d: any) => d.data)
@@ -11,15 +13,19 @@ export function setDimensions(scales: any, chartData: any) {
 		);
 
 	const width = scales.x.max - scales.x.min;
+
+	const initialMax = parseInt(PUBLIC_INITIAL_SCALE) / 2;
+	const initialMin = (-1 * parseInt(PUBLIC_INITIAL_SCALE)) / 2;
+
 	scales.x = {
 		...scales.x,
-		max: bounds.x.max + 0.1 * width,
-		min: bounds.x.min - 0.1 * width
+		max: Math.max(bounds.x.max + 0.1 * width, initialMax),
+		min: Math.min(bounds.x.min - 0.1 * width, initialMin)
 	};
 	const height = scales.y.max - scales.y.min;
 	scales.y = {
 		...scales.y,
-		max: bounds.y.max + 0.1 * height,
-		min: bounds.y.min - 0.1 * height
+		max: Math.max(bounds.y.max + 0.1 * height, initialMax),
+		min: Math.min(bounds.y.min - 0.1 * height, initialMin)
 	};
 }
