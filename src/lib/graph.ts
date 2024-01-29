@@ -1,12 +1,9 @@
-import { Polygon } from './polygon';
-
-type PolygonMap = { [color: string]: Polygon };
-
-export function setDimensions(scales: any, polygons: PolygonMap) {
-	const bounds = Object.values(polygons)
-		.flatMap((polygon) => polygon.points)
+export function setDimensions(scales: any, chartData: any) {
+	const bounds = chartData
+		.map((d: any) => d.data)
+		.flatMap((polygon: any) => polygon)
 		.reduce(
-			(acc, point) => ({
+			(acc: any, point: any) => ({
 				x: { max: Math.max(point.x, acc.x.max), min: Math.min(point.x, acc.x.min) },
 				y: { max: Math.max(point.y, acc.y.max), min: Math.min(point.y, acc.y.min) }
 			}),

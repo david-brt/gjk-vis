@@ -95,7 +95,7 @@
 				mDiff = mDiff.map((point) => new Point(point.x, point.y));
 				$polygons['mDiff'] = new Polygon(mDiff as Point[]);
 
-				setDimensions(chart.options.scales, visiblePolygons);
+				setDimensions(chart.options.scales, chart.data.datasets);
 				chart.update('none');
 			}
 		}
@@ -103,12 +103,13 @@
 
 	function toggleMinkowski(showMinkowski: boolean) {
 		if (!chart) return;
+
+		chart.data.datasets[2].data = [];
 		if (showMinkowski) {
 			chart.data.datasets[2].data = $polygons['mDiff'].getDrawable();
-			chart.update('none');
-			return;
 		}
-		chart.data.datasets[2].data = [];
+
+		setDimensions(chart.options.scales, chart.data.datasets);
 		chart.update('none');
 	}
 
