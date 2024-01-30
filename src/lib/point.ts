@@ -7,6 +7,14 @@ export class Point {
 		this.y = y;
 	}
 
+	negate() {
+		return new Point(-this.x, -this.y);
+	}
+
+	equals(point: Point) {
+		return this.x === point.x && this.y === point.y;
+	}
+
 	add(point: Point) {
 		return new Point(this.x + point.x, this.y + point.y);
 	}
@@ -15,7 +23,8 @@ export class Point {
 		return new Point(this.x - point.x, this.y - point.y);
 	}
 
-	dotProduct(point: Point) {
+	// returns the dot product with the given point
+	dot(point: Point) {
 		return this.x * point.x + this.y * point.y;
 	}
 
