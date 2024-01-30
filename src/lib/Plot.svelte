@@ -102,7 +102,7 @@
 	};
 
 	function toggleMinkowski(showMinkowski: boolean) {
-		if (!chart) return;
+		if (!chart || !$polygons['mDiff']) return;
 
 		chart.data.datasets[2].data = showMinkowski ? $polygons['mDiff'].getDrawable() : [];
 		setDimensions(chart.options.scales, chart.data.datasets);
