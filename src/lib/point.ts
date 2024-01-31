@@ -15,12 +15,21 @@ export class Point {
 		return this.x === point.x && this.y === point.y;
 	}
 
+	// squared length of the vector
+	length2() {
+		return this.x * this.x + this.y * this.y;
+	}
+
 	add(point: Point) {
 		return new Point(this.x + point.x, this.y + point.y);
 	}
 
 	subtract(point: Point) {
 		return new Point(this.x - point.x, this.y - point.y);
+	}
+
+	multiplyScalar(scalar: number) {
+		return new Point(this.x * scalar, this.y * scalar);
 	}
 
 	// returns the dot product with the given point

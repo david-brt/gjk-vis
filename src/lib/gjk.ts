@@ -5,8 +5,9 @@ export function gjk(pa: Polygon, pb: Polygon) {
 	let a = pa.hullPoints[1];
 	let b = pb.hullPoints[1];
 	let v = a.subtract(b);
+	console.log(v);
 	let vPrev = new Point(Infinity, Infinity);
-	let simplex = [] as Point[];
+	let simplex = [v];
 	while (!v.equals(vPrev)) {
 		const support = supportMinkowski(pa, pb, v.negate());
 		vPrev = v;
@@ -20,8 +21,10 @@ export function gjk(pa: Polygon, pb: Polygon) {
 	return distance(closest.closestPoint, new Point());
 }
 
-function supportMinkowski(pa: Polygon, pb: Polygon, v: Point) {
-	return support(pa, v).subtract(support(pb, v.negate()));
+function supportMinkowski(pa: Polygon, pb: Polygon, d: Point) {
+	const supportA = support(pa, d);
+	const supportB = support(pb, d.negate());
+	return supportA.subtract(supportB);
 }
 
 function support(p: Polygon, v: Point) {
@@ -32,7 +35,7 @@ function support(p: Polygon, v: Point) {
 			return point.dot(v);
 		}
 		return max;
-	}, 0);
+	}, -Infinity);
 	return res;
 }
 
@@ -42,14 +45,13 @@ function distanceSub(points: Point[]) {
 }
 
 function closestPointInSimplex(points: Point[], v: Point) {
-	console.log('points', points);
 	let min = Infinity;
 	let closestPoint = new Point();
 	let closestFace = [] as Point[];
 	for (let i = 0; i < points.length; i++) {
 		const a = points[i];
 		const b = points[(i + 1) % points.length];
-		const c = closestPointFromLine(a, b, v);
+		const c = closestPointFromLine2(a, b, v);
 		if (distance2(c, v) < min) {
 			min = distance2(c, v);
 			closestPoint = c;
@@ -86,4 +88,21 @@ function closestPointFromLine(a: Point, b: Point, p: Point) {
 	const t = atp_dot_atb / atb2;
 
 	return new Point(a.x + a_to_b.x * t, a.y + a_to_b.y * t);
+}
+
+function closestPointFromLine2(a: Point, b: Point, p: Point) {
+	const ap = p.subtract(a);
+	const ab = b.subtract(a);
+
+	const magnitudeAB = ab.length2();
+	const abapProduct = ap.dot(ab);
+	const distance = abapProduct / magnitudeAB;
+
+	if (distance >= 0 && distance <= 1) {
+		return a.add(ab.multiplyScalar(distance));
+	}
+	if (distance < 0) {
+		return a;
+	}
+	return b;
 }
