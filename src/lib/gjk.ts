@@ -51,7 +51,7 @@ function closestPointInSimplex(points: Point[], v: Point) {
 	for (let i = 0; i < points.length; i++) {
 		const a = points[i];
 		const b = points[(i + 1) % points.length];
-		const c = closestPointFromLine2(a, b, v);
+		const c = closestPointFromLine(a, b, v);
 		if (distance2(c, v) < min) {
 			min = distance2(c, v);
 			closestPoint = c;
@@ -75,22 +75,8 @@ function distance(a: Point, b: Point) {
 /**
  * more information on https://stackoverflow.com/questions/3120357/get-closest-point-to-a-line
  */
+
 function closestPointFromLine(a: Point, b: Point, p: Point) {
-	if (a.equals(b)) {
-		return a;
-	}
-
-	const a_to_p = new Point(p.x - a.x, p.y - a.y);
-	const a_to_b = new Point(b.x - a.x, b.y - a.y);
-
-	const atb2 = a_to_b.x ** 2 + a_to_b.y ** 2;
-	const atp_dot_atb = a_to_p.x * a_to_b.x + a_to_p.y * a_to_b.y;
-	const t = atp_dot_atb / atb2;
-
-	return new Point(a.x + a_to_b.x * t, a.y + a_to_b.y * t);
-}
-
-function closestPointFromLine2(a: Point, b: Point, p: Point) {
 	const ap = p.subtract(a);
 	const ab = b.subtract(a);
 
