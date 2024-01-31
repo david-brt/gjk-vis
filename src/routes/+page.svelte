@@ -2,7 +2,7 @@
 	import Plot from '$lib/Plot.svelte';
 	import { selectedColor } from '$lib/store';
 
-	let showMinkowski = false;
+	let showMinkowski = true;
 </script>
 
 <button on:click={() => selectedColor.set('red')}>Red</button>

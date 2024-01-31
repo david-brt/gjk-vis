@@ -94,6 +94,7 @@
 				let mDiff = minkowskiDifference($polygons['red'], $polygons['blue']).getDrawable();
 				mDiff = mDiff.map((point) => new Point(point.x, point.y));
 				$polygons['mDiff'] = new Polygon(mDiff as Point[]);
+				chart.data.datasets[2].data = showMinkowski ? $polygons['mDiff'].getDrawable() : [];
 
 				setDimensions(chart.options.scales, chart.data.datasets);
 				chart.update('none');
