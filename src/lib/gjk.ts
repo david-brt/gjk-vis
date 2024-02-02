@@ -1,11 +1,49 @@
 import { Polygon } from './polygon';
 import { Point } from './point';
 
+export class gjkState {
+	a: Point;
+	b: Point;
+	v: Point;
+	closestPoint: Point;
+	closestFace: Point[];
+	vPrev: Point;
+	simplex: Point[];
+	support: Point = new Point();
+
+	constructor(pa: Polygon, pb: Polygon) {
+		this.a = pa.hullPoints[1];
+		this.b = pb.hullPoints[1];
+		this.v = this.a.subtract(this.b);
+		this.closestPoint = new Point();
+		this.closestFace = [new Point(Infinity), new Point(Infinity)];
+		this.vPrev = new Point(Infinity, Infinity);
+		this.simplex = [this.v];
+	}
+
+	next(pa: Polygon, pb: Polygon) {
+		const nextState = new gjkState(pa, pb);
+		nextState.support = supportMinkowski(pa, pb, this.v.negate());
+		nextState.vPrev = this.v;
+		nextState.simplex.push(nextState.support);
+		const closest = distanceSub(nextState.simplex);
+		nextState.closestFace = closest.closestFace;
+		nextState.closestPoint = closest.closestPoint;
+		nextState.simplex = nextState.closestFace;
+		nextState.v = closest.closestPoint;
+		return nextState;
+	}
+
+	distance() {
+		const closest = closestPointInSimplex(this.simplex, new Point());
+		return distance(closest.closestPoint, new Point());
+	}
+}
+
 export function gjk(pa: Polygon, pb: Polygon) {
 	let a = pa.hullPoints[1];
 	let b = pb.hullPoints[1];
 	let v = a.subtract(b);
-	console.log(v);
 	let vPrev = new Point(Infinity, Infinity);
 	let simplex = [v];
 	while (!v.equals(vPrev)) {
@@ -44,7 +82,7 @@ function distanceSub(points: Point[]) {
 	return closestPointInSimplex(points, o);
 }
 
-function closestPointInSimplex(points: Point[], v: Point) {
+export function closestPointInSimplex(points: Point[], v: Point) {
 	let min = Infinity;
 	let closestPoint = new Point();
 	let closestFace = [] as Point[];
