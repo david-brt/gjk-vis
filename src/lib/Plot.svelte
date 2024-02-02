@@ -6,31 +6,12 @@
 	import { Point } from './point';
 	import { Polygon, minkowskiDifference } from './polygon';
 	import { setDimensions } from './graph';
+	import { data } from './chartData';
 
 	export let showMinkowski: boolean;
 
 	let canvas: HTMLCanvasElement;
 	let chart: any;
-
-	const data: Chart.ChartData = {
-		datasets: [
-			{
-				label: 'blue',
-				data: [],
-				showLine: true
-			},
-			{
-				label: 'red',
-				data: [],
-				showLine: true
-			},
-			{
-				label: 'minkowski difference',
-				data: [],
-				showLine: true
-			}
-		]
-	};
 
 	const config: any = {
 		type: 'scatter',
