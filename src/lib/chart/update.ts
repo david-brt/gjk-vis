@@ -6,16 +6,9 @@ import { setDimensions } from '$lib/graph';
 import * as store from '$lib/store';
 
 export function updateChart(e: Event, chart: any) {
-	let polygons = get(store.polygons);
-	let selectedColor = get(store.selectedColor);
-	let showMinkowski = get(store.showMinkowski);
-
-	store.polygons.subscribe((p) => {
-		polygons = p;
-	});
-	store.selectedColor.subscribe((color) => {
-		selectedColor = color;
-	});
+	const polygons = get(store.polygons);
+	const selectedColor = get(store.selectedColor);
+	const showMinkowski = get(store.showMinkowski);
 
 	const canvasPosition = getRelativePosition(e, chart);
 	let dataX = chart.scales.x.getValueForPixel(canvasPosition.x);
@@ -24,7 +17,6 @@ export function updateChart(e: Event, chart: any) {
 	dataX = Math.round(dataX * 10) / 10;
 	dataY = Math.round(dataY * 10) / 10;
 
-	console.log(chart.data.datasets);
 	chart.data.datasets.forEach((dataset: Chart.ChartDataSets) => {
 		const color = selectedColor;
 		if (dataset.label != color) return;
