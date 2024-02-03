@@ -6,3 +6,5 @@ type PolygonMap = { [color: string]: Polygon };
 export const polygons: Writable<PolygonMap> = writable({});
 
 export const selectedColor = writable('red');
+
+export const showMinkowski = writable(true);

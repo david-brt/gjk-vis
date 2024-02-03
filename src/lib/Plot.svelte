@@ -2,13 +2,11 @@
 	import { onMount } from 'svelte';
 	import AutoChart from 'chart.js/auto';
 	import { getRelativePosition } from 'chart.js/helpers';
-	import { polygons, selectedColor } from '$lib/store';
+	import { polygons, selectedColor, showMinkowski } from '$lib/store';
 	import { Point } from './point';
 	import { Polygon, minkowskiDifference } from './polygon';
 	import { setDimensions } from './graph';
 	import { data } from './chartData';
-
-	export let showMinkowski: boolean;
 
 	let canvas: HTMLCanvasElement;
 	let chart: any;
@@ -96,7 +94,7 @@
 		chart = new AutoChart(ctx, config);
 	});
 
-	$: toggleMinkowski(showMinkowski);
+	$: toggleMinkowski($showMinkowski);
 </script>
 
 <div class="plot-container">
