@@ -1,10 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import AutoChart from 'chart.js/auto';
-	import { getRelativePosition } from 'chart.js/helpers';
-	import { polygons, selectedColor, showMinkowski } from '$lib/store';
-	import { Point } from './point';
-	import { Polygon, minkowskiDifference } from './polygon';
+	import { polygons, showMinkowski } from '$lib/store';
 	import { setDimensions } from './graph';
 	import { data } from './chartData';
 	import { updateChart } from './chart/update';
