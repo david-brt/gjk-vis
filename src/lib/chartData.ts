@@ -6,7 +6,7 @@ export const data = {
 	datasets: generateData()
 } as Chart.ChartData;
 
-function generateData(): Chart.ChartData {
+function generateData() {
 	const ps = get(polygons);
 	const res = [];
 	for (const key in ps) {
@@ -25,6 +25,5 @@ function generateData(): Chart.ChartData {
 			showLine: true
 		});
 	});
-	console.log(res);
 	return res;
 }
