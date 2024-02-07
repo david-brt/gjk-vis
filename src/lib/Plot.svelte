@@ -45,9 +45,11 @@
 	};
 
 	function toggleMinkowski(showMinkowski: boolean) {
-		if (!chart || !$polygons['mDiff']) return;
+		if (!chart || !$polygons.mDiff) return;
 
-		chart.data.datasets[2].data = showMinkowski ? $polygons['mDiff'].getDrawable() : [];
+		const mDiffPoints = $polygons.mDiff.getDrawable();
+
+		chart.data.datasets[2].data = showMinkowski ? mDiffPoints : [];
 		setDimensions(chart.options.scales, chart.data.datasets);
 		chart.update('none');
 	}

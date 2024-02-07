@@ -1,9 +1,14 @@
 import { writable, type Writable } from 'svelte/store';
 import { Polygon } from '$lib/polygon';
+import type { GJKPolygons } from '$lib/polygon';
 
-type PolygonMap = { [color: string]: Polygon };
+const emptyPolygons = {
+	a: new Polygon([]),
+	b: new Polygon([]),
+	mDiff: new Polygon([])
+};
 
-export const polygons: Writable<PolygonMap> = writable({});
+export const polygons: Writable<GJKPolygons> = writable(emptyPolygons);
 
 export const selectedColor = writable('red');
 

@@ -103,3 +103,9 @@ function convexHull(points: Point[]): Point[] {
 	}
 	return hull;
 }
+
+export type GJKPolygons = {
+	a: Polygon;
+	b: Polygon;
+	mDiff: Polygon;
+};

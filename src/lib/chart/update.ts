@@ -29,7 +29,7 @@ export function updateChart(e: Event, chart: any) {
 		// update chart
 		dataset.data = polygons[color].getDrawable();
 	});
-	if (polygons['red'] === undefined || polygons['blue'] === undefined) {
+	if (polygons.a === undefined || polygons['blue'] === undefined) {
 		chart.update('none');
 		return;
 	}
