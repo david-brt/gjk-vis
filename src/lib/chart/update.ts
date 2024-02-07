@@ -7,7 +7,7 @@ import * as store from '$lib/store';
 
 export function updateChart(e: Event, chart: any) {
 	const polygons = get(store.polygons);
-	const selectedPolygon = get(store.selectedPolygon);
+	const polygonIndex = get(store.selectedPolygon);
 	const showMinkowski = get(store.showMinkowski);
 
 	const canvasPosition = getRelativePosition(e, chart);
@@ -18,7 +18,6 @@ export function updateChart(e: Event, chart: any) {
 	dataY = Math.round(dataY * 10) / 10;
 
 	chart.data.datasets.forEach((dataset: Chart.ChartDataSets) => {
-		const polygonIndex = selectedPolygon;
 		if (dataset.label != polygonIndex) return;
 		// update store
 		store.polygons.update((p) => {

@@ -6,6 +6,7 @@ export const data: Chart.ChartData = {
 			showLine: true
 		},
 		{
+			label: 'b',
 			data: [],
 			showLine: true
 		},
