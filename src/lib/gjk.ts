@@ -1,17 +1,18 @@
 import { Polygon } from './polygon';
 import { Point } from './point';
 
-export class gjkState {
-	a: Point;
-	b: Point;
-	v: Point;
-	closestPoint: Point;
-	closestFace: Point[];
-	vPrev: Point;
-	simplex: Point[];
-	support: Point = new Point();
+export class GjkState {
+	a = new Point();
+	b = new Point();
+	v = new Point();
+	closestPoint = new Point();
+	closestFace = [] as Point[];
+	vPrev = new Point();
+	simplex = [] as Point[];
+	support = new Point();
 
-	constructor(pa: Polygon, pb: Polygon) {
+	constructor(pa?: Polygon, pb?: Polygon) {
+		if (!pa || !pb) return;
 		this.a = pa.hullPoints[1];
 		this.b = pb.hullPoints[1];
 		this.v = this.a.subtract(this.b);
@@ -22,7 +23,7 @@ export class gjkState {
 	}
 
 	next(pa: Polygon, pb: Polygon) {
-		const nextState = new gjkState(pa, pb);
+		const nextState = new GjkState(pa, pb);
 		nextState.support = supportMinkowski(pa, pb, this.v.negate());
 		nextState.vPrev = this.v;
 		nextState.simplex.push(nextState.support);

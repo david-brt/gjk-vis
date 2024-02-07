@@ -1,5 +1,5 @@
 import { test, expect } from 'vitest';
-import { gjk, gjkState } from '$lib/gjk';
+import { gjk, GjkState } from '$lib/gjk';
 import { Polygon } from '$lib/polygon';
 import { Point } from '$lib/point';
 
@@ -20,7 +20,7 @@ test('gjk class', () => {
 	const pa = new Polygon(aPoints);
 	const pb = new Polygon(bPoints);
 
-	let state = new gjkState(pa, pb);
+	let state = new GjkState(pa, pb);
 
 	while (!state.v.equals(state.vPrev)) {
 		state = state.next(pa, pb);
