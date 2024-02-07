@@ -4,6 +4,7 @@ export function setDimensions(scales: any, chartData: any) {
 	const bounds = chartData
 		.map((d: any) => d.data)
 		.flatMap((polygon: any) => polygon)
+		.filter((point: any) => point)
 		.reduce(
 			(acc: any, point: any) => ({
 				x: { max: Math.max(point.x, acc.x.max), min: Math.min(point.x, acc.x.min) },
