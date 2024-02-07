@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import AutoChart from 'chart.js/auto';
 	import { polygons, showMinkowski } from '$lib/store';
-	import { setDimensions } from './graph';
+	import { setDimensions } from './chart/scales';
 	import { data } from './chartData';
 	import { updateChart } from './chart/update';
 

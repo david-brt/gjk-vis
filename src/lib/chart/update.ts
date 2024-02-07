@@ -2,7 +2,7 @@ import { get } from 'svelte/store';
 import { getRelativePosition } from 'chart.js/helpers';
 import { Point } from '$lib/point';
 import { Polygon, minkowskiDifference } from '$lib/polygon';
-import { setDimensions } from '$lib/graph';
+import { setDimensions } from '$lib/chart/scales';
 import * as store from '$lib/store';
 
 export function updateChart(e: Event, chart: any) {
