@@ -10,6 +10,10 @@ export class Polygon {
 		this.hullPoints = convexHull(points);
 	}
 
+	isEmpty() {
+		return this.hullPoints.length === 0;
+	}
+
 	/**
 	 * adds point to the polygon, sorts the points and recalculates the convex hull
 	 */

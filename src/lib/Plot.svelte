@@ -48,7 +48,6 @@
 		if (!chart || !$polygons.mDiff) return;
 
 		const mDiffPoints = $polygons.mDiff.getDrawable();
-
 		chart.data.datasets[2].data = showMinkowski ? mDiffPoints : [];
 		setDimensions(chart.options.scales, chart.data.datasets);
 		chart.update('none');

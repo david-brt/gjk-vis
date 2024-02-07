@@ -10,6 +10,6 @@ const emptyPolygons = {
 
 export const polygons: Writable<GJKPolygons> = writable(emptyPolygons);
 
-export const selectedColor = writable('red');
+export const selectedPolygon = writable('a');
 
 export const showMinkowski = writable(true);

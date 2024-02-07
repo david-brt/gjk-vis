@@ -7,7 +7,7 @@ import * as store from '$lib/store';
 
 export function updateChart(e: Event, chart: any) {
 	const polygons = get(store.polygons);
-	const selectedColor = get(store.selectedColor);
+	const selectedPolygon = get(store.selectedPolygon);
 	const showMinkowski = get(store.showMinkowski);
 
 	const canvasPosition = getRelativePosition(e, chart);
@@ -18,18 +18,18 @@ export function updateChart(e: Event, chart: any) {
 	dataY = Math.round(dataY * 10) / 10;
 
 	chart.data.datasets.forEach((dataset: Chart.ChartDataSets) => {
-		const color = selectedColor;
-		if (dataset.label != color) return;
+		const polygonIndex = selectedPolygon;
+		if (dataset.label != polygonIndex) return;
 		// update store
 		store.polygons.update((p) => {
 			const point = new Point(dataX, dataY);
-			p[color] ? p[color].addPoint(point) : (p[color] = new Polygon([point]));
+			p[polygonIndex].addPoint(point);
 			return p;
 		});
 		// update chart
-		dataset.data = polygons[color].getDrawable();
+		dataset.data = polygons[polygonIndex].getDrawable();
 	});
-	if (polygons.a === undefined || polygons['blue'] === undefined) {
+	if (polygons.a.isEmpty() || polygons.b.isEmpty()) {
 		chart.update('none');
 		return;
 	}
@@ -38,7 +38,7 @@ export function updateChart(e: Event, chart: any) {
 	visiblePolygons['mDiff'] = new Polygon([]);
 	chart.data.datasets[2].data = [];
 
-	let mDiff = minkowskiDifference(polygons['red'], polygons['blue']).getDrawable();
+	let mDiff = minkowskiDifference(polygons.a, polygons.b).getDrawable();
 	mDiff = mDiff.map((point) => new Point(point.x, point.y));
 	polygons['mDiff'] = new Polygon(mDiff as Point[]);
 	chart.data.datasets[2].data = showMinkowski ? polygons['mDiff'].getDrawable() : [];

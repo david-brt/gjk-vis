@@ -1,12 +1,11 @@
 export const data: Chart.ChartData = {
 	datasets: [
 		{
-			label: 'blue',
+			label: 'a',
 			data: [],
 			showLine: true
 		},
 		{
-			label: 'red',
 			data: [],
 			showLine: true
 		},
