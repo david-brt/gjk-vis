@@ -6,9 +6,9 @@ export class GjkState {
 	b = new Point();
 	v = new Point();
 	closestPoint = new Point();
-	closestFace = [] as Point[];
+	closestFace = new Polygon();
 	vPrev = new Point();
-	simplex = [] as Point[];
+	simplex = new Polygon();
 	support = new Point();
 
 	constructor(pa?: Polygon, pb?: Polygon) {
@@ -17,26 +17,26 @@ export class GjkState {
 		this.b = pb.hullPoints[1];
 		this.v = this.a.subtract(this.b);
 		this.closestPoint = new Point();
-		this.closestFace = [new Point(Infinity), new Point(Infinity)];
+		this.closestFace = new Polygon([new Point(Infinity), new Point(Infinity)]);
 		this.vPrev = new Point(Infinity, Infinity);
-		this.simplex = [this.v];
+		this.simplex = new Polygon([this.v]);
 	}
 
 	next(pa: Polygon, pb: Polygon) {
 		const nextState = new GjkState(pa, pb);
 		nextState.support = supportMinkowski(pa, pb, this.v.negate());
 		nextState.vPrev = this.v;
-		nextState.simplex.push(nextState.support);
-		const closest = distanceSub(nextState.simplex);
-		nextState.closestFace = closest.closestFace;
+		nextState.simplex.addPoint(nextState.support);
+		const closest = distanceSub(nextState.simplex.points);
+		nextState.closestFace.set(closest.closestFace);
 		nextState.closestPoint = closest.closestPoint;
-		nextState.simplex = nextState.closestFace;
+		nextState.simplex.set(nextState.closestFace.points);
 		nextState.v = closest.closestPoint;
 		return nextState;
 	}
 
 	distance() {
-		const closest = closestPointInSimplex(this.simplex, new Point());
+		const closest = closestPointInSimplex(this.simplex.points, new Point());
 		return distance(closest.closestPoint, new Point());
 	}
 }
