@@ -1,13 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import AutoChart from 'chart.js/auto';
-	import { polygons, showMinkowski } from '$lib/store';
+	import { polygons, showMinkowski, chart } from '$lib/store';
 	import { setDimensions } from './chart/scales';
 	import { data } from './chartData';
-	import { updateChart } from './chart/update';
+	import { updatePolygons } from './chart/update';
 
 	let canvas: HTMLCanvasElement;
-	let chart: any;
 
 	const config: any = {
 		type: 'scatter',
@@ -39,23 +38,26 @@
 				}
 			},
 			onClick: (e: Event) => {
-				updateChart(e, chart);
+				updatePolygons(e);
 			}
 		}
 	};
 
 	function toggleMinkowski(showMinkowski: boolean) {
-		if (!chart || !$polygons.mDiff) return;
+		if (!$chart || !$polygons.mDiff) return;
 
 		const mDiffPoints = $polygons.mDiff.getDrawable();
-		chart.data.datasets[2].data = showMinkowski ? mDiffPoints : [];
-		setDimensions(chart.options.scales, chart.data.datasets);
-		chart.update('none');
+		chart.update((chart: any) => {
+			chart.data.datasets[2].data = showMinkowski ? mDiffPoints : [];
+			return chart;
+		});
+		setDimensions($chart.options.scales, $chart.data.datasets);
+		$chart.update('none');
 	}
 
 	onMount(() => {
 		const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
-		chart = new AutoChart(ctx, config);
+		chart.set(new AutoChart(ctx, config));
 	});
 
 	$: toggleMinkowski($showMinkowski);

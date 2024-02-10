@@ -17,3 +17,5 @@ export const selectedPolygon: Writable<keyof GJKPolygons> = writable('a');
 export const showMinkowski = writable(true);
 
 export const gjkState = writable(new GjkState());
+
+export const chart = writable();
