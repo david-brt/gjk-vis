@@ -28,15 +28,15 @@ export class GjkState {
 		nextState.simplex.addPoint(nextState.support);
 		const closest = distanceSub(nextState.simplex.points);
 		nextState.closestFace.set(nextState.simplex.closestEdgeToOrigin());
-		nextState.closestPoint = closest.closestPoint;
+		nextState.closestPoint = closest;
 		nextState.simplex.set(nextState.closestFace.points);
-		nextState.v = closest.closestPoint;
+		nextState.v = closest;
 		return nextState;
 	}
 
 	distance() {
 		const closest = closestPointInSimplex(this.simplex.points, new Point());
-		return distance(closest.closestPoint, new Point());
+		return distance(closest, new Point());
 	}
 }
 
@@ -65,22 +65,17 @@ function distanceSub(points: Point[]) {
 
 export function closestPointInSimplex(points: Point[], v: Point) {
 	let min = Infinity;
-	let closestPoint = new Point();
-	let closestFace = [] as Point[];
+	let closest = new Point();
 	for (let i = 0; i < points.length; i++) {
 		const a = points[i];
 		const b = points[(i + 1) % points.length];
 		const c = closestPointFromLine(a, b, v);
 		if (distance2(c, v) < min) {
 			min = distance2(c, v);
-			closestPoint = c;
-			closestFace = [a, b];
+			closest = c;
 		}
 	}
-	return {
-		closestPoint,
-		closestFace
-	};
+	return closest;
 }
 
 export function distance2(a: Point, b: Point) {
