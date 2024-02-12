@@ -5,8 +5,15 @@
 	const { chart, gjkState, polygons, showMinkowski } = store;
 
 	let minkowskiChecked = $showMinkowski;
+	let validPolygons = false;
 
+	$: validPolygons = $polygons.a.points.length > 2 && $polygons.b.points.length > 2;
 	$: store.showMinkowski.set(minkowskiChecked);
+
+	function initializeGjk() {
+		gjkState.set(new GjkState($polygons.a, $polygons.b));
+		minkowskiChecked = true;
+	}
 
 	function handleGjkStep() {
 		if ($gjkState.v.equals($gjkState.vPrev))
@@ -25,10 +32,17 @@
 
 <button on:click={() => store.selectedPolygon.set('a')}>polygon A</button>
 <button on:click={() => store.selectedPolygon.set('b')}>polygon B</button>
-<button on:click={handleGjkStep}>GJK Step</button>
-<div class="checkbox-wrapper">
-	<input type="checkbox" value="Show Minkowski Difference" bind:checked={minkowskiChecked} />
-	<label for="showMinkowski">Show Minkowski Difference</label>
-</div>
+{#if $gjkState.i === -1 && validPolygons}
+	<button on:click={initializeGjk}>Start GJK algorithm </button>
+{/if}
+{#if $gjkState.i >= 0}
+	<button on:click={handleGjkStep}>GJK Step</button>
+{/if}
+{#if $gjkState.i === -1}
+	<div class="checkbox-wrapper">
+		<input type="checkbox" value="Show Minkowski Difference" bind:checked={minkowskiChecked} />
+		<label for="showMinkowski">Show Minkowski Difference</label>
+	</div>
+{/if}
 
 <Plot />

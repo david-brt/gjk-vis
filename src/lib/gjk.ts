@@ -2,7 +2,7 @@ import { Polygon } from './polygon';
 import { Point } from './point';
 
 export class GjkState {
-	i = 0;
+	i = -1;
 	v = new Point();
 	closestPoint = new Point();
 	closestFace = new Polygon();
@@ -12,6 +12,7 @@ export class GjkState {
 
 	constructor(pa?: Polygon, pb?: Polygon) {
 		if (!pa || !pb) return;
+		this.i = 0;
 		this.v = supportMinkowski(pa, pb, new Point(1, 0));
 		this.closestPoint = new Point();
 		this.closestFace = new Polygon([new Point(Infinity), new Point(Infinity)]);
