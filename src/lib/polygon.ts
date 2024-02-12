@@ -1,4 +1,5 @@
 import { Point } from './point';
+import { closestPointFromLine, distance2 } from '$lib/gjk';
 
 export class Polygon {
 	points: Point[];
@@ -34,6 +35,24 @@ export class Polygon {
 		});
 		points.push(points[0]);
 		return points;
+	}
+
+	closestEdgeToOrigin() {
+		let minDistance = Infinity;
+		let closestEdge = [new Point(), new Point()];
+		const origin = new Point();
+		for (let i = 0; i < this.hullPoints.length; i++) {
+			let a = this.hullPoints[i];
+			let b = this.hullPoints[(i + 1) % this.hullPoints.length];
+			const edge = [a, b];
+			const closestPoint = closestPointFromLine(a, b, origin);
+			const distance = distance2(closestPoint, origin);
+			if (distance < minDistance) {
+				minDistance = distance;
+				closestEdge = edge;
+			}
+		}
+		return closestEdge;
 	}
 }
 

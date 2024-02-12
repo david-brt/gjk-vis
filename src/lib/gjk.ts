@@ -2,6 +2,7 @@ import { Polygon } from './polygon';
 import { Point } from './point';
 
 export class GjkState {
+	i = 0;
 	v = new Point();
 	closestPoint = new Point();
 	closestFace = new Polygon();
@@ -20,11 +21,13 @@ export class GjkState {
 
 	next(pa: Polygon, pb: Polygon) {
 		const nextState = new GjkState(pa, pb);
+		nextState.i = this.i + 1;
 		nextState.support = supportMinkowski(pa, pb, this.v.negate());
 		nextState.vPrev = this.v;
+		nextState.simplex = this.simplex;
 		nextState.simplex.addPoint(nextState.support);
 		const closest = distanceSub(nextState.simplex.points);
-		nextState.closestFace.set(closest.closestFace);
+		nextState.closestFace.set(nextState.simplex.closestEdgeToOrigin());
 		nextState.closestPoint = closest.closestPoint;
 		nextState.simplex.set(nextState.closestFace.points);
 		nextState.v = closest.closestPoint;
@@ -99,7 +102,7 @@ export function closestPointInSimplex(points: Point[], v: Point) {
 	};
 }
 
-function distance2(a: Point, b: Point) {
+export function distance2(a: Point, b: Point) {
 	return (a.x - b.x) ** 2 + (a.y - b.y) ** 2;
 }
 
@@ -111,7 +114,7 @@ function distance(a: Point, b: Point) {
  * more information on https://stackoverflow.com/questions/3120357/get-closest-point-to-a-line
  */
 
-function closestPointFromLine(a: Point, b: Point, p: Point) {
+export function closestPointFromLine(a: Point, b: Point, p: Point) {
 	const ap = p.subtract(a);
 	const ab = b.subtract(a);
 

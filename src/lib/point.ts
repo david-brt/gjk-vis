@@ -12,6 +12,7 @@ export class Point {
 	}
 
 	equals(point: Point) {
+		if (!this || !point) return this === point;
 		return this.x === point.x && this.y === point.y;
 	}
 
