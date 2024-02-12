@@ -50,3 +50,16 @@ export function updatePolygons(e: Event) {
 	setDimensions(chart.options.scales, chart.data.datasets);
 	chart.update('none');
 }
+
+export function updateGJK() {
+	const polygons = get(store.polygons);
+	let currentState = get(store.gjkState);
+	store.gjkState.update((gjkState) => {
+		currentState = gjkState.next(polygons.a, polygons.b);
+		return currentState;
+	});
+	store.chart.update((c: any) => {
+		c.data.datasets[9].data = currentState.simplex.getDrawable();
+		return c;
+	});
+}
