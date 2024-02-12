@@ -40,25 +40,6 @@ export class GjkState {
 	}
 }
 
-export function gjk(pa: Polygon, pb: Polygon) {
-	let a = pa.hullPoints[1];
-	let b = pb.hullPoints[1];
-	let v = a.subtract(b);
-	let vPrev = new Point(Infinity, Infinity);
-	let simplex = [v];
-	while (!v.equals(vPrev)) {
-		const support = supportMinkowski(pa, pb, v.negate());
-		vPrev = v;
-		simplex.push(support);
-		const closest = distanceSub(simplex);
-		const { closestFace } = closest;
-		simplex = closestFace;
-		v = closest.closestPoint;
-	}
-	const closest = closestPointInSimplex(simplex, new Point());
-	return distance(closest.closestPoint, new Point());
-}
-
 function supportMinkowski(pa: Polygon, pb: Polygon, d: Point) {
 	const supportA = support(pa, d);
 	const supportB = support(pb, d.negate());
@@ -109,10 +90,6 @@ export function distance2(a: Point, b: Point) {
 function distance(a: Point, b: Point) {
 	return Math.sqrt(distance2(a, b));
 }
-
-/**
- * more information on https://stackoverflow.com/questions/3120357/get-closest-point-to-a-line
- */
 
 export function closestPointFromLine(a: Point, b: Point, p: Point) {
 	const ap = p.subtract(a);

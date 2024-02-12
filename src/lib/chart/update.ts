@@ -59,7 +59,7 @@ export function updateGJK() {
 		return currentState;
 	});
 	store.chart.update((c: any) => {
-		c.data.datasets[9].data = currentState.simplex.getDrawable();
+		c.data.datasets[3].data = currentState.simplex.getDrawable();
 		return c;
 	});
 }
