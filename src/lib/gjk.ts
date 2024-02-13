@@ -39,6 +39,20 @@ export class GjkState {
 		const closest = closestPointInSimplex(this.simplex.points, new Point());
 		return distance(closest, new Point());
 	}
+
+	/**
+	 * runs state.next until the closest point is found
+	 * @returns {GjkState[]} all states needed to find the closest point
+	 */
+	execute(pa: Polygon, pb: Polygon): GjkState[] {
+		let state = this as GjkState;
+		let states = [state];
+		while (!state.v.equals(state.vPrev)) {
+			state = state.next(pa, pb);
+			states.push(state);
+		}
+		return states;
+	}
 }
 
 function supportMinkowski(pa: Polygon, pb: Polygon, d: Point) {

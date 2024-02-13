@@ -11,9 +11,7 @@ test('gjk class', () => {
 
 	let state = new GjkState(pa, pb);
 
-	while (!state.v.equals(state.vPrev)) {
-		state = state.next(pa, pb);
-	}
+	state = state.execute(pa, pb).pop() as GjkState;
 
 	expect(state.distance()).toBe(1);
 });
@@ -26,9 +24,7 @@ test('gjk class', () => {
 
 	let state = new GjkState(pa, pb);
 
-	while (!state.v.equals(state.vPrev)) {
-		state = state.next(pa, pb);
-	}
+	state = state.execute(pa, pb).pop() as GjkState;
 
 	expect(state.distance()).toBe(1);
 });
