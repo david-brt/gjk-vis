@@ -18,4 +18,8 @@ export const showMinkowski = writable(true);
 
 export const gjkState = writable(new GjkState());
 
+export const gjkStates: Writable<GjkState[]> = writable([]);
+
+export const gjkIndex: Writable<number> = writable(-1);
+
 export const chart: Writable<any> = writable();
