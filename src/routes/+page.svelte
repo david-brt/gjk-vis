@@ -2,10 +2,12 @@
 	import Plot from '$lib/Plot.svelte';
 	import * as store from '$lib/store';
 	import { GjkState } from '$lib/gjk';
-	const { chart, gjkState, gjkStates, gjkIndex, polygons, showMinkowski } = store;
+	import { showSubstate } from '$lib/chart/update';
+	const { gjkState, gjkStates, gjkIndex, polygons, showMinkowski } = store;
 
 	let minkowskiChecked = $showMinkowski;
 	let validPolygons = false;
+	let subState = 0;
 
 	$: validPolygons = $polygons.a.points.length > 2 && $polygons.b.points.length > 2;
 	$: store.showMinkowski.set(minkowskiChecked);
@@ -18,27 +20,25 @@
 			c.data.datasets[2].borderColor = 'rgba(255, 209, 102, 0.3)';
 			return c;
 		});
-		$chart.update('none');
 		gjkIndex.set(0);
 		minkowskiChecked = true;
 	}
 
 	function handleGjkStep() {
-		store.chart.update((c: any) => {
-			gjkIndex.update((i: number) => i + 1);
-			const newState = $gjkStates[$gjkIndex];
-			gjkState.set(newState);
-			c.data.datasets[3].data = newState.simplex.getDrawable();
-			return c;
-		});
-		$chart.update('none');
+		if ($gjkIndex >= $gjkStates.length) return;
+		const subStateCount = 2;
+		subState = (subState + 1) % subStateCount;
+		showSubstate(subState);
+		if (subState === subStateCount - 1) {
+			gjkIndex.update((i) => i + 1);
+		}
 	}
 </script>
 
-{#if $gjkState.i >= 0}
+{#if $gjkIndex >= 0}
 	<button on:click={handleGjkStep}>GJK Step</button>
 {/if}
-{#if $gjkState.i === -1}
+{#if $gjkIndex === -1}
 	<button on:click={() => store.selectedPolygon.set('a')}>polygon A</button>
 	<button on:click={() => store.selectedPolygon.set('b')}>polygon B</button>
 	<div class="checkbox-wrapper">
@@ -46,7 +46,7 @@
 		<label for="showMinkowski">Show Minkowski Difference</label>
 	</div>
 {/if}
-{#if $gjkState.i === -1 && validPolygons}
+{#if $gjkIndex === -1 && validPolygons}
 	<button on:click={initializeGjk}>Start GJK algorithm </button>
 {/if}
 

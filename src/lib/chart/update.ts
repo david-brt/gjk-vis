@@ -3,6 +3,7 @@ import { getRelativePosition } from 'chart.js/helpers';
 import { Point } from '$lib/point';
 import { Polygon, minkowskiDifference } from '$lib/polygon';
 import { setDimensions } from '$lib/chart/scales';
+import { generateSubstateConfig } from '$lib/chart/substate';
 import * as store from '$lib/store';
 
 export function updatePolygons(e: Event) {
@@ -62,4 +63,17 @@ export function updateGJK() {
 		c.data.datasets[3].data = currentState.simplex.getDrawable();
 		return c;
 	});
+}
+
+export function showSubstate(index: number) {
+	const chart = get(store.chart) as any;
+	const gjkIndex = get(store.gjkIndex);
+	const currentState = get(store.gjkStates)[gjkIndex];
+	const subStateConfig = generateSubstateConfig(index, currentState);
+	if (index === 0) console.log(subStateConfig);
+	store.chart.update((c: any) => {
+		c.data.datasets.push(subStateConfig);
+		return c;
+	});
+	chart.update('none');
 }
