@@ -12,7 +12,9 @@ export class GjkState {
 
 	constructor(pa?: Polygon, pb?: Polygon) {
 		if (!pa || !pb) return;
-		this.v = supportMinkowski(pa, pb, new Point(1, 0));
+		const randX = Math.round(Math.random());
+		const randY = Math.round(Math.random());
+		this.v = supportMinkowski(pa, pb, new Point(randX, randY));
 		this.closestPoint = new Point();
 		this.closestFace = new Polygon([new Point(Infinity), new Point(Infinity)]);
 		this.vPrev = new Point(Infinity, Infinity);
@@ -24,7 +26,7 @@ export class GjkState {
 		nextState.support = supportMinkowski(pa, pb, this.v.negate());
 		const simplex = this.simplex;
 		simplex.addPoint(nextState.support);
-		nextState.simplex = simplex;
+		nextState.simplex = new Polygon(simplex.points);
 		nextState.closestFace.set(simplex.closestEdgeToOrigin());
 		simplex.set(nextState.closestFace.points);
 		nextState.vPrev = this.v;
@@ -45,10 +47,11 @@ export class GjkState {
 	 */
 	execute(pa: Polygon, pb: Polygon): GjkState[] {
 		let state = this as GjkState;
-		let states = [state];
+		const states = [state];
 		while (!state.v.equals(state.vPrev)) {
-			state = state.next(pa, pb);
+			const newState = state.next(pa, pb);
 			states.push(state);
+			state = newState;
 		}
 		return states;
 	}

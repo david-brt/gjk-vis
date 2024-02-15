@@ -66,14 +66,12 @@ export function updateGJK() {
 }
 
 export function showSubstate(index: number) {
-	const chart = get(store.chart) as any;
 	const gjkIndex = get(store.gjkIndex);
 	const currentState = get(store.gjkStates)[gjkIndex];
 	const subStateConfig = generateSubstateConfig(index, currentState);
-	if (index === 0) console.log(subStateConfig);
 	store.chart.update((c: any) => {
 		c.data.datasets.push(subStateConfig);
+		c.update('none');
 		return c;
 	});
-	chart.update('none');
 }
