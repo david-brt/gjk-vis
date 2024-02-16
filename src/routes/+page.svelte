@@ -37,6 +37,10 @@
 		chart.update('none');
 		if (subState === subStateCount - 1) {
 			gjkIndex.update((i) => i + 1);
+			store.chart.update((c: any) => {
+				c.data.datasets.length = 3;
+				return c;
+			});
 		}
 	}
 </script>
